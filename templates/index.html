@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Guidance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --accent-color: #f1c40f;
+            --text-color: #2c3e50;
+            --light-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: var(--primary-color) !important;
+            font-weight: 600;
+        }
+
+        .nav-link {
+            color: var(--text-color) !important;
+            font-weight: 500;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .stats-section {
+            background: var(--light-bg);
+            padding: 80px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 500;
+        }
+
+        .btn-light:hover {
+            background: #f8f9fa;
+            color: var(--secondary-color);
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        footer {
+            background: var(--text-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Additional Styles for New Sections */
+        .success-story-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .success-story-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .success-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .metric {
+            background: var(--light-bg);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover {
+            transform: translateX(5px);
+        }
+
+        .news-date {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .interactive-crop-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .crop-option {
+            background: white;
+            border: 2px solid var(--primary-color);
+            border-radius: 25px;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .crop-option:hover, .crop-option.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .success-metrics {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                overflow-x: auto;
+            }
+
+            .interactive-crop-selector {
+                justify-content: center;
+            }
+
+            .crop-option {
+                width: calc(50% - 1rem);
+                text-align: center;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-seedling me-2"></i>Smart Crop Guidance
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/form">Get Started</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content" data-aos="fade-right">
+                    <h1 class="hero-title">Intelligent Crop Recommendations</h1>
+                    <p class="hero-text">
+                        Make data-driven decisions for your farm using our advanced AI-powered crop recommendation system.
+                        Get personalized suggestions based on soil conditions, climate, and market trends.
+                    </p>
+                    <a href="/form" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-rocket me-2"></i>Get Started
+                    </a>
+                    <a href="#features" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <img src="https://img.freepik.com/free-vector/smart-farming-abstract-concept-vector-illustration_107173-25631.jpg" alt="Smart Farming" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">Why Choose Our System?</h2>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <i class="fas fa-robot feature-icon"></i>
+                        <h3>AI-Powered Analysis</h3>
+                        <p>Advanced machine learning algorithms analyze multiple parameters to provide accurate crop recommendations.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line feature-icon"></i>
+                        <h3>Market Insights</h3>
+                        <p>Real-time market trends and price forecasts to help you maximize your profits.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <i class="fas fa-cloud-sun feature-icon"></i>
+                        <h3>Weather Integration</h3>
+                        <p>Local weather data integration for better decision-making and crop planning.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="stat-card">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Accuracy Rate</div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-card">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">Farmers Helped</div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-card">
+                        <div class="stat-number">20+</div>
+                        <div class="stat-label">Crop Varieties</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">How It Works</h2>
+            <div class="row align-items-center">
+                <div class="col-md-6" data-aos="fade-right">
+                    <img src="https://img.freepik.com/free-vector/smart-farming-automation-abstract-concept-vector-illustration_107173-25636.jpg" alt="How It Works" class="img-fluid">
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="steps">
+                        <div class="step mb-4">
+                            <h4><i class="fas fa-1 me-2"></i>Input Your Data</h4>
+                            <p>Enter your soil parameters, location, and environmental conditions.</p>
+                        </div>
+                        <div class="step mb-4">
+                            <h4><i class="fas fa-2 me-2"></i>AI Analysis</h4>
+                            <p>Our AI system analyzes your data using advanced machine learning models.</p>
+                        </div>
+                        <div class="step mb-4">
+                            <h4><i class="fas fa-3 me-2"></i>Get Recommendations</h4>
+                            <p>Receive detailed crop recommendations, growing tips, and market insights.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">What Farmers Say</h2>
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The crop recommendations were spot on! My yield increased by 40% this season."</p>
+                        <div class="testimonial-author">- Rajesh Kumar, Punjab</div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The market insights helped me choose the right time to sell my produce."</p>
+                        <div class="testimonial-author">- Amit Patel, Gujarat</div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Easy to use and very accurate predictions. Highly recommended!"</p>
+                        <div class="testimonial-author">- Priya Singh, Maharashtra</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="mb-4" data-aos="fade-up">Ready to Transform Your Farming?</h2>
+            <p class="mb-4" data-aos="fade-up">Join thousands of farmers who are already benefiting from our smart recommendations.</p>
+            <a href="/form" class="btn btn-light btn-lg" data-aos="fade-up">
+                <i class="fas fa-seedling me-2"></i>Start Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Interactive Crop Selection Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4" data-aos="fade-up">Explore Crops</h2>
+            <div class="interactive-crop-selector" data-aos="fade-up">
+                <div class="crop-option" onclick="selectCrop('Rice')">Rice</div>
+                <div class="crop-option" onclick="selectCrop('Maize')">Maize</div>
+                <div class="crop-option" onclick="selectCrop('Cotton')">Cotton</div>
+                <div class="crop-option" onclick="selectCrop('Wheat')">Wheat</div>
+                <div class="crop-option" onclick="selectCrop('Sugarcane')">Sugarcane</div>
+            </div>
+            <div class="loading-spinner" id="cropLoadingSpinner"></div>
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <canvas id="yieldChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4" data-aos="fade-up">Success Stories</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4" data-aos="fade-up">
+                    <div class="success-story-card" onclick="showStoryDetails('story1')">
+                        <h4>Rice Farming Revolution</h4>
+                        <p class="text-muted">Punjab, India</p>
+                        <p>Using AI-driven recommendations, our system helped increase rice yield by 45%</p>
+                        <div class="success-metrics">
+                            <div class="metric">
+                                <strong>Yield Increase</strong>
+                                <p>45%</p>
+                            </div>
+                            <div class="metric">
+                                <strong>Water Saved</strong>
+                                <p>30%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="success-story-card" onclick="showStoryDetails('story2')">
+                        <h4>Cotton Success Story</h4>
+                        <p class="text-muted">Gujarat, India</p>
+                        <p>Precision farming techniques led to premium quality cotton production</p>
+                        <div class="success-metrics">
+                            <div class="metric">
+                                <strong>Quality Improvement</strong>
+                                <p>60%</p>
+                            </div>
+                            <div class="metric">
+                                <strong>Profit Increase</strong>
+                                <p>75%</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News & Updates Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4" data-aos="fade-up">Latest Updates</h2>
+            <div class="row">
+                <div class="col-md-8 mx-auto">
+                    <div class="news-card" data-aos="fade-up">
+                        <div class="news-date">January 31, 2025</div>
+                        <h5>New AI Model Released</h5>
+                        <p>Our latest AI model now includes climate change adaptation strategies for better crop recommendations.</p>
+                    </div>
+                    <div class="news-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="news-date">January 25, 2025</div>
+                        <h5>Market Price Prediction Feature</h5>
+                        <p>Now get accurate crop price predictions up to 3 months in advance.</p>
+                    </div>
+                    <div class="news-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="news-date">January 20, 2025</div>
+                        <h5>Partnership with Agricultural Universities</h5>
+                        <p>Collaborating with top agricultural institutions for enhanced recommendations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Visualization Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4" data-aos="fade-up">Crop Analysis</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="chart-container" data-aos="fade-up">
+                        <canvas id="successRateChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="chart-container" data-aos="fade-up">
+                        <canvas id="cropDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>About Us</h5>
+                    <p>We're dedicated to empowering farmers with AI-driven insights for better crop decisions.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#features" class="text-white">Features</a></li>
+                        <li><a href="#how-it-works" class="text-white">How It Works</a></li>
+                        <li><a href="/form" class="text-white">Get Started</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Connect With Us</h5>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4">
+            <div class="text-center">
+                <p>&copy; 2025 Smart Crop Guidance System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Interactive Crop Selection
+        function selectCrop(cropName) {
+            document.querySelectorAll('.crop-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.innerText === cropName) {
+                    option.classList.add('active');
+                }
+            });
+            
+            document.getElementById('cropLoadingSpinner').style.display = 'block';
+            setTimeout(() => {
+                updateCharts(cropName);
+                document.getElementById('cropLoadingSpinner').style.display = 'none';
+            }, 1000);
+        }
+
+        // Success Story Details
+        function showStoryDetails(storyId) {
+            // Implement modal or expandable content
+            console.log(`Showing details for ${storyId}`);
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Success Rate Chart
+            new Chart(document.getElementById('successRateChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Success Rate',
+                        data: [85, 87, 88, 90, 92, 95],
+                        borderColor: '#2ecc71',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Recommendation Success Rate'
+                        }
+                    }
+                }
+            });
+
+            // Crop Distribution Chart
+            new Chart(document.getElementById('cropDistributionChart'), {
+                type: 'pie',
+                data: {
+                    labels: ['Rice', 'Wheat', 'Cotton', 'Maize', 'Others'],
+                    datasets: [{
+                        data: [30, 25, 20, 15, 10],
+                        backgroundColor: [
+                            '#2ecc71',
+                            '#3498db',
+                            '#e74c3c',
+                            '#f1c40f',
+                            '#95a5a6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Crop Distribution'
+                        }
+                    }
+                }
+            });
+
+            // Initialize empty charts for yield and price
+            initializeYieldAndPriceCharts();
+        }
+
+        function initializeYieldAndPriceCharts() {
+            // Yield Chart
+            window.yieldChart = new Chart(document.getElementById('yieldChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['2020', '2021', '2022', '2023', '2024'],
+                    datasets: [{
+                        label: 'Yield (Tons/Hectare)',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: '#2ecc71'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Yearly Yield'
+                        }
+                    }
+                }
+            });
+
+            // Price Chart
+            window.priceChart = new Chart(document.getElementById('priceChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Price (₹/Quintal)',
+                        data: [0, 0, 0, 0, 0, 0],
+                        borderColor: '#3498db',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Price Trends'
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts(cropName) {
+            // Sample data - in real application, this would come from an API
+            const cropData = {
+                'Rice': {
+                    yield: [4.2, 4.5, 4.8, 5.1, 5.4],
+                    price: [1800, 1850, 1900, 2000, 2100, 2200]
+                },
+                'Maize': {
+                    yield: [3.8, 4.0, 4.2, 4.5, 4.8],
+                    price: [1600, 1650, 1700, 1750, 1800, 1850]
+                },
+                'Cotton': {
+                    yield: [2.5, 2.7, 2.9, 3.1, 3.3],
+                    price: [5500, 5600, 5700, 5800, 5900, 6000]
+                },
+                'Wheat': {
+                    yield: [3.5, 3.7, 3.9, 4.1, 4.3],
+                    price: [2000, 2100, 2200, 2300, 2400, 2500]
+                },
+                'Sugarcane': {
+                    yield: [70, 72, 75, 78, 80],
+                    price: [300, 310, 320, 330, 340, 350]
+                }
+            };
+
+            // Update Yield Chart
+            window.yieldChart.data.datasets[0].data = cropData[cropName].yield;
+            window.yieldChart.options.plugins.title.text = `${cropName} Yearly Yield`;
+            window.yieldChart.update();
+
+            // Update Price Chart
+            window.priceChart.data.datasets[0].data = cropData[cropName].price;
+            window.priceChart.options.plugins.title.text = `${cropName} Price Trends`;
+            window.priceChart.update();
+        }
+
+        // Initialize all charts when the page loads
+        window.onload = function() {
+            initializeCharts();
+            // Select Rice by default
+            selectCrop('Rice');
+        };
+    </script>
+</body>
+</html>

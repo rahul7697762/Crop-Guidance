@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Guidance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+
+        .card-header {
+            background: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1rem;
+        }
+
+        .form-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Result Styling */
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .crop-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .crop-name {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .crop-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .detail-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .similar-crops {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .crop-chip {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .soil-health {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .soil-health.good { background: #d4edda; }
+        .soil-health.fair { background: #fff3cd; }
+        .soil-health.poor { background: #f8d7da; }
+
+        .weather-card {
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1rem;
+        }
+
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .crop-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Additional Styling */
+        .detail-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: 100%;
+        }
+
+        .disease-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .disease-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .disease-list li:last-child {
+            border-bottom: none;
+        }
+
+        .market-trends {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+
+        .trend-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            height: 100%;
+        }
+
+        .trend-card h6 {
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-seedling me-2"></i>Smart Crop Guidance
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/form"><i class="fas fa-chart-bar me-1"></i>Analysis</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Input Form -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>Crop Analysis Form</h4>
+            </div>
+            <div class="card-body">
+                <form action="/predict" method="POST" id="cropForm">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nitrogen (N)</label>
+                            <div class="input-group">
+                                <input type="number" name="Nitrogen" class="form-control" required step="0.01">
+                                <span class="input-group-text">kg/ha</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phosphorus (P)</label>
+                            <div class="input-group">
+                                <input type="number" name="Phosporus" class="form-control" required step="0.01">
+                                <span class="input-group-text">kg/ha</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Potassium (K)</label>
+                            <div class="input-group">
+                                <input type="number" name="Potassium" class="form-control" required step="0.01">
+                                <span class="input-group-text">kg/ha</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Temperature</label>
+                            <div class="input-group">
+                                <input type="number" name="Temperature" class="form-control" required step="0.01">
+                                <span class="input-group-text">°C</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Humidity</label>
+                            <div class="input-group">
+                                <input type="number" name="Humidity" class="form-control" required step="0.01">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">pH Level</label>
+                            <input type="number" name="Ph" class="form-control" required step="0.01">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Rainfall</label>
+                            <div class="input-group">
+                                <input type="number" name="Rainfall" class="form-control" required step="0.01">
+                                <span class="input-group-text">mm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search me-2"></i>Analyze Crop Suitability
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Weather Card -->
+        <div class="weather-card" id="weatherCard" style="display: none;">
+            <h5><i class="fas fa-cloud-sun me-2"></i>Local Weather</h5>
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div id="temperature"></div>
+                </div>
+                <div class="col-md-4">
+                    <div id="humidity"></div>
+                </div>
+                <div class="col-md-4">
+                    <div id="description"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        {% if result %}
+        <div class="result-container">
+            <div class="crop-info">
+                <div class="crop-name">
+                    <i class="fas fa-leaf me-2"></i>{{ result.crop.name }}
+                </div>
+                <div class="crop-details">
+                    <div class="detail-card">
+                        <h6><i class="fas fa-calendar-alt me-2"></i>Growing Season</h6>
+                        <p>{{ result.crop.growing_season }}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-tint me-2"></i>Water Requirement</h6>
+                        <p>{{ result.crop.water_req }}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-clock me-2"></i>Growing Time</h6>
+                        <p>{{ result.crop.growing_time }}</p>
+                    </div>
+                    <div class="detail-card">
+                        <h6><i class="fas fa-rupee-sign me-2"></i>Market Price</h6>
+                        <p>{{ result.crop.market_price }}</p>
+                    </div>
+                </div>
+
+                <!-- Additional Crop Details -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <h6><i class="fas fa-disease me-2"></i>Common Diseases</h6>
+                            <ul class="disease-list">
+                                {% for disease in result.crop.diseases %}
+                                <li>{{ disease }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-section">
+                            <h6><i class="fas fa-flask me-2"></i>Nutrient Requirements</h6>
+                            <p>{{ result.crop.nutrients }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Trends Section -->
+                <div class="market-trends mt-4">
+                    <h5><i class="fas fa-chart-line me-2"></i>Market Analysis</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="trend-card">
+                                <h6>Current Trend</h6>
+                                <p class="mb-0">
+                                    <i class="fas fa-arrow-trend-up me-2"></i>
+                                    {{ result.market_trend.trend }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="trend-card">
+                                <h6>Market Forecast</h6>
+                                <p class="mb-0">
+                                    <i class="fas fa-forecast me-2"></i>
+                                    {{ result.market_trend.forecast }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="trend-card">
+                                <h6>Demand</h6>
+                                <p class="mb-0">
+                                    <i class="fas fa-signal me-2"></i>
+                                    {{ result.market_trend.demand }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Growing Tips</h6>
+                    <p>{{ result.crop.tips }}</p>
+                </div>
+            </div>
+
+            <!-- Soil Health Section -->
+            <div class="soil-health {{ result.soil_health.status.lower() }}">
+                <h5><i class="fas fa-flask me-2"></i>Soil Health Analysis</h5>
+                <p><strong>Status:</strong> {{ result.soil_health.status }}</p>
+                {% if result.soil_health.messages %}
+                <ul>
+                    {% for message in result.soil_health.messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% if result.soil_health.improvements %}
+                <h6>Recommended Improvements:</h6>
+                <ul>
+                    {% for improvement in result.soil_health.improvements %}
+                    <li>{{ improvement }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <!-- Similar Crops Section -->
+            <div class="mt-4">
+                <h5><i class="fas fa-seedling me-2"></i>Alternative Crops</h5>
+                <div class="similar-crops">
+                    {% for crop in result.similar_crops %}
+                    <span class="crop-chip">
+                        <i class="fas fa-plant-wilt"></i>
+                        {{ crop }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="alert alert-danger mt-3">
+            <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading">
+        <div class="spinner-border text-success" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Show loading overlay during form submission
+        document.getElementById('cropForm').addEventListener('submit', function() {
+            document.querySelector('.loading').classList.add('active');
+        });
+
+        // Weather functionality
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(getWeather, showError);
+            }
+        }
+
+        function getWeather(position) {
+            fetch('/get_weather', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    lat: position.coords.latitude,
+                    lon: position.coords.longitude
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('weatherCard').style.display = 'block';
+                document.getElementById('temperature').innerHTML = `<i class="fas fa-thermometer-half me-2"></i>${Math.round(data.main.temp)}°C`;
+                document.getElementById('humidity').innerHTML = `<i class="fas fa-tint me-2"></i>${data.main.humidity}%`;
+                document.getElementById('description').innerHTML = `<i class="fas fa-cloud me-2"></i>${data.weather[0].description}`;
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function showError(error) {
+            console.error('Error getting location:', error);
+        }
+
+        // Get weather on page load
+        getLocation();
+    </script>
+</body>
+</html>
